@@ -374,8 +374,8 @@ It's a kinda funny suggestion. Now I understand that what they mean is just
 that you shouldn't [apply gamma](#gamma-correction) on the alpha values (who'd
 do that?), but such an expression is certainly confusing. When we use terms
 like "linear RGB colorspace", "linear" isn't just an adjective here. It's a
-relationship. It suggests that color data values in such a colorspace are
-linear maps of physical light intensities. A value cannot be linear all by
+relationship. It suggests that color data values in such a colorspace form
+linear maps with physical light intensities. A value cannot be linear all by
 itself[^self-linear], it has to be linear *against something*.
 
 [^self-linear]: Well, technically it can, and it is, linear against itself, but
