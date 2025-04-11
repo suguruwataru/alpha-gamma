@@ -153,7 +153,7 @@ See also [the gamma tutorial in the PNG spec](https://www.w3.org/TR/PNG-GammaApp
 ## 2.2 Gamma
 
 In [the PNG specification gamma
-tutorial](https://www.w3.org/TR/PNG-GammaAppendix.html), it mentioned that
+tutorial](https://www.w3.org/TR/PNG-GammaAppendix.html), it's mentioned that
 
 > The original NTSC video standard required cameras to have a transfer function
 with a gamma of 1/2.2, or about 0.45.
