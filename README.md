@@ -17,7 +17,8 @@ get it right, at least couldn't get it to be what I thought was right. Then I
 started doing searches and now I think I understand it, and I believe there are
 things I can add to these great articles.
 
-I'll just write down what I've found.
+I'll just write down what I've found, as a list of concepts, with later ones
+building on top of previous ones.
 
 ## Color
 
