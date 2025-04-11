@@ -167,15 +167,16 @@ had their values being:
 ## Gamma colorspace
 
 By [our definition of a colorspace](#colorspace), the [2.2-gamma-corrected
-color data](#22-gamma) of course are in their own [colorspace](#colorspace). I
-don't think this is formalized any where, but conventionally it's often said
-that they are in "the gamma colorspace".
+color data](#22-gamma) of course are in their own colorspace. I don't think
+this is formalized any where, but conventionally it's often said that they are
+in "the gamma colorspace".
 
 ## sRGB colorspace
 
-sRGB colorspace[^srgb-draft] is a RGB colorspace that was developed for CRT
-devices. It stores colors' red, blue and green values in a way so that
-**approximately**
+sRGB colorspace[^srgb-draft] is a RGB colorspace that was developed for
+accurate recreation of colors on different devices. It was designed at a time
+where CRT monitors and [2.2-gamma-corrected](#22-gamma) data were prevalent. It
+stores colors' red, blue and green values in a way so that **approximately**
 
     (sRGB value) = intensity ^ (1/2.2)
 
@@ -188,6 +189,10 @@ data somewhat correctly, for example.
 sRGB's actual definition include more things, things like what the whitest
 white is, what the redest red is, etc. so that newer software and devices that
 take sRGB into account can more accurately store or recreate the color.
+
+I will not put more details in the sRGB standard in this document, and wish
+that you never need to implement conversion between sRGB and [linear
+sRGB](#linear-srgb-colorspace) yourself.
 
 ## Importance of the sRGB colorspace
 
@@ -294,14 +299,14 @@ It's well-defined and the definition is simple and clear.
 
 ## Alpha and opacity
 
-Alpha was not strictly defined to be a ratio of areas by its authors.
-Sometimes, it was also considered to be the opacity of a shape assuming that it
-fully covers the lowest shape.[^porter-duff2]
+Alpha was not strictly defined to only be a ratio of areas by its authors.
+Sometimes, it was also considered to be the opacity of a shape assuming that
+the shape fully covers the lowest shape.[^porter-duff2]
 
 [^porter-duff2]: See https://imaginary-institute.com/resources/TechNote10/TechNote10.html
 
 Though alpha can mean either of the things, this document generally will stick
-to the ratio of area meaning. The reason being, do you know physics of
+to the ratio of area meaning. The reason being, do you know the physics of
 transparency/opacity? I certainly don't. Only the ratio of area meaning is
 something that I can reason about.
 
@@ -364,11 +369,11 @@ It is suggested here and there that alpha value should be "stored linearly".
 is often used as a reference.
 
 It's a kinda funny suggestion. Now I understand that what they mean is just
-that you shouldn't [apply gamma](#gamma-correction) on the alpha values, but
-such an expression is certainly confusing. When we use terms like "linear RGB
-colorspace", "linear" isn't just an adjective here. It's a relationship. It
-suggests that color data values in such a colorspace are linear maps of
-physical light intensities. A value cannot be linear all by
+that you shouldn't [apply gamma](#gamma-correction) on the alpha values (who'd
+do that?), but such an expression is certainly confusing. When we use terms
+like "linear RGB colorspace", "linear" isn't just an adjective here. It's a
+relationship. It suggests that color data values in such a colorspace are
+linear maps of physical light intensities. A value cannot be linear all by
 itself[^self-linear], it has to be linear *against something*.
 
 [^self-linear]: Well, technically it can, and it is, linear against itself, but
