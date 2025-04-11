@@ -22,7 +22,7 @@ top of previous ones. Note it may take several attempts to reach a final
 definition, and they only stand within the context of this document. Other
 people may have different definitions for the words.
 
-## Color, first attempt
+## Color
 
 A color is a feeling. Some electro-magnetic waves (also known as light) causes
 a typical human to get a feeling when they hit the human's eyes. For an
@@ -52,7 +52,7 @@ With this setup, given a color, we can get numbers. Given numbers, we can get
 colors. We call this setup a colorspace, and if we store such numbers as data,
 we say that the data is in this colorspace.
 
-## RGB Colorspace, first attempt
+## RGB Colorspace
 
 The physiology of humans decides that, there are 3 special wavelengths, and by
 combining light of the 3 wavelengths of different intensities, one can recreate
@@ -60,7 +60,7 @@ any color a typical human can perceive.
 
 When pure light of the 3 wavelengths hit a typical human eye with an
 appropriate intensity, they respectively causes the human to feel red, green,
-blue, so let's just call the wavelengths R, G, B.
+blue, so let's just call light of the wavelengths R, G, B.
 
 Thus, rather than array of (wavelength, intensity) tuples, we can store a color
 as (R intensity, G intensity, B intensity) 3-tuples. Obviously, compared to
@@ -73,35 +73,10 @@ red-blue-green-only light-emitting device (much simpler than full-spectrum
 ones) we can reproduce the color. So we do have a colorspace here, and let's
 say that the 3-tuples are in the RGB colorspace.
 
-## Color
-
-When our device emit light to recreate certain color, it's too much work to
-ensure what hits the viewer's eyeballs are always the same, if that's possible
-at all. Of course a close viewer and a far viewer see different things. Thus,
-we don't want to deal with colors seen by viewers. We emit red, blue, green
-light with certain
-[luminance](https://en.wikipedia.org/wiki/Luminance)[^luminance], so that what
-a viewer sees is roughly the light intensity combination we want.
-
-[^luminance]: Again, not sure that I'm using the correct physical quantity
-here.
-
-Since we do not directly work with the viewer's feelings, we update [the
-definition of color](#color-first-attempt). Now a color is just an abstract
-idea that corresponds to a (R luminance, B luminance, G luminance) tuple.
-
-## RGB colorspace
-
-[The new definition of colors](#colors) already creates a setup of color-data
-correspondence. With a color, we get a (R luminance, B luminance, G luminance)
-tuple. With a (R luminance, B luminance, G luminance), we get a color, since a
-color is just the idea that's associated to the tuple. Thus, this setup is a
-colorspace, and we call it the RGB colorspace.
-
 ## Linear RGB colorspace
 
 An RGB colorspace is still very abstract. A color is store as numbers, which
-are luminance in a tuple. Of course luminance can be written as numbers, but
+are intensity in a tuple. Of course intensity can be written as numbers, but
 how exactly? What unit do we use? How exactly do we store the numbers as bytes?
 
 We can give different answers to the questions. With each answer combination,
@@ -112,14 +87,14 @@ there is a certain type of linear RGB colorspaces that we pay most attention
 to. In such a colorspace, color data have the form (R value, G value, B value)
 such that
 
-- When a value is 0, it means the lowest relevant luminance
-- When a value is 1, it means the highest relevant luminance
+- When a value is 0, it means the lowest relevant intensity
+- When a value is 1, it means the highest relevant intensity
 
 <a name="relevant"></a>
-Where "relevant luminance" mean different things in different contexts:
+Where "relevant intensity" mean different things in different contexts:
 
-- lowest/highest luminance that humans can perceive
-- lowest/highest luminance that a device can emit light for
+- lowest/highest intensity that humans can perceive
+- lowest/highest intensity that a device can emit light for
 - etc.
 
 Reference to such a linear RGB colorspace is so prevalent that "linear RGB
@@ -133,7 +108,7 @@ colorspace.
 Due to how they function, the optical components of a camera may give its
 digital components colors in such a way:
 
-  (data value) = luminance ^ (camera gamma)
+  (data value) = intensity ^ (camera gamma)
 
 The exponent is called "gamma" by convention.
 
@@ -141,10 +116,10 @@ This does not only happen in cameras, but also in many other optical/electrical
 devices. Even the human eyes contribute to it due to different viewing
 conditions.
 
-Therefore, to make the computer monitor recreate the luminance stored in some
+Therefore, to make the computer monitor recreate the intensity stored in some
 data, there needs to be a step:
   
-  luminance = (data value) ^ gamma
+  intensity = (data value) ^ gamma
 
 Where gamma cancels all the other gamma applied. Such cancellation is called
 gamma correction.
@@ -162,14 +137,12 @@ In the past, the CRT monitors were the primary contributors to the need of gamma
 correction. When color data were fed to them (as voltage applied to their
 electron guns), they generally worked like this:
   
-  luminance = (data value) ^ (CRT gamma)
+  intensity = (data value) ^ (CRT gamma)
 
-By convention (similar to how we deal with [linear RGB
-colorspaces](#linear-rgb-colorspace)), luminance and data value are numerized
-so that
+By convention, intensity and data value are numerized in a way so that
 
-- 1 represents the highest [relevant](#relevant) luminance or data value
-- 0 represents the lowest [relevant](#relevant) luminance or data value
+- 1 represents the highest [relevant](#relevant) intensity or data value
+- 0 represents the lowest [relevant](#relevant) intensity or data value
 
 Within such convention, CRT gamma is generally 2.2-2.5.
 
@@ -191,7 +164,7 @@ This is for gamma correction of that time, primarily to cancel the CRT gamma.
 In other words, gamma corrected color data from that time had their values
 being:
   
-    (data value) = luminance ^ 2.2
+    (data value) = intensity ^ (1/2.2)
 
 ## Gamma colorspace
 
@@ -206,9 +179,19 @@ sRGB colorspace[^srgb-draft] is a RGB colorspace that was developed for CRT
 devices. It stores colors' red, blue and green values in a way so that
 **approximately**
 
-    (sRGB value) = luminance ^ 2.2
+    (sRGB value) = intensity ^ (1/2.2)
 
 [^srgb-draft]: Draft: https://www.w3.org/Graphics/Color/sRGB.
+
+This way, they stay somewhat compatible with data in the gamma colorspace.
+Software that were written for data in the gamma colorspace can show sRGB
+data somewhat correctly, for example.
+
+sRGB's actual definition include more things, things like what the whitest
+white is, what the redest red is, etc. so that newer software and devices that
+take sRGB into account can more accurately store or recreate the color.
+
+## Importance of the sRGB colorspace
 
 Today, sRGB is important because lots of things assume color data to be in
 sRGB if they don't have (often don't accept) exact info.
@@ -231,27 +214,53 @@ etc. etc.
 colorspace](#gamma-colorspace). sRGB has different functions to convert to and
 from the a linear RGB colorspace.
 
-sRGB does explicitly approximates the gamma colorspace to be compatible with
-color data that was gamma corrected for whatever correction needs at that time.
-Therefore, applying a 2.2 or 1/2.2 gamma to some color data to convert to and
-from sRGB is not entirely wrong, but is still not entirely correct either.
+sRGB does explicitly approximate the gamma colorspace to be somewhat compatible
+with color data that was gamma corrected for whatever correction needs at that
+time. Therefore, applying a 2.2 or 1/2.2 gamma to some color data to convert to
+and from sRGB is not entirely wrong, but is still not entirely correct either.
 sRGB's own conversion functions are more complicated, so this is still a pretty
 common shorthand/optimization, when one doesn't need to be *that* correct.
 
+## Human perception and Intensity
+
+The colors humans feel do not map simply to intensities. Human eyes are better
+at seeing differences in intensities at lower intensities. At a lower
+intensity, a human may see a slight different in intensity. At higher
+intensity, not so much.
+
+## 2.2 Gamma, sRGB and human perception
+
+sRGB and gamma colorspaces' behavior interestingly somewhat matches human
+feelings. At a lower intensity level, a change in intensity correponds to a
+larger change in sRGB or gamma value, compared to a same change at a higher
+intensity level.
+
+The gamma colorspace certainly doesn't mean to have such a property. It's just
+a result of the need for gamma correction. I am not aware of sRGB having the
+intention to match human perception this way, either. Therefore, such a
+matching is accidental, but is considered favorable. In addition to the fact
+that as a data value change matches human perception change, changing colors is
+more intuitive in those colorspaces, there's also storage efficiency
+consideration. The PNG specification gamma tutorial explains it well:
+https://www.w3.org/TR/PNG-GammaAppendix.html, in the "Gamma-encoded samples are
+good" section.
+
 ## Linear sRGB colorspace
 
-sRGB actually didn't define how to calculate its values to and from luminance.
-It's actually more complicated. Anyway, it does define itself against a linear
-RGB colorspace. It also specifies that, this linear RGB colorspace has whitest
-white to be the same as sRGB, blackest black same as sRGB, reddest red same as
-sRGB, etc. This differs this linear RGB colorspace from other ones, and it is
-called the linear sRGB colorspace.
+ so that newer software and devices that
+take sRGB into account can more accurately store or recreate the color.
+
+sRGB is more than just conversion to and from a linear colorspace.
+
+It also specifies things like what the whitest white is, what the redest red
+is, etc. The linear RGB colorspace that has all those properties matching sRGB
+is called the linear sRGB colorspace.
 
 ## Alpha blending
 
 Alpha blending is the technique of combining multiple colors. It is also called
 the `over` operator in Porter-Duff compositing. The formula of producing the
-`result` of color data in a **linear** RGB colorspace[^why-linear] `color 1`
+`result` of color data in a **linear**[^why-linear] RGB colorspace `color 1`
 `over` `color2` is:
   
     (result alpha) = (color 1 alpha) + (color 2 alpha) * (1 - color 1 alpha)
@@ -277,52 +286,112 @@ value) 3-tuples to (R value, G value, B value, alpha)), which denotes the
 portion of the area of the lowest shape it covers. In other words, `alpha` is a
 ratio of areas.[^not-alpha]
 
-Intuitively, the ratio of area linearly map to the ratio of light emitted as
-part of all light emitted from the whole shape. With such a definition, alpha
-blending must be designed to deal with physical light, and things like gamma
-correction will only break it.
+## Alpha blending and linear RGB colorspaces
+
+Intuitively, [a ratio of areas](#alpha) linearly maps to the ratio of light
+emitted among all light emitted from the whole shape. With such a definition,
+alpha blending must have been designed to deal with physical light. Alpha
+blending is a linear map, and as linear maps are [operation
+preserving](https://en.wikipedia.org/wiki/Linear_map#Definition_and_first_consequences),
+so since alpha blending works on physical light, it works on any linear RGB
+colorspace. However, the operation preserving property only holds when
+operations are all linear. For any color data produced through non-linear
+operations from phyisical light intensity, alpha blending is not designed to
+work, and directly applying alpha blending to them is undefined
+behavior.[^no-non-linear-alpha] This includes color data in the gamma, sRGB,
+and many other colorspaces.
 
 [^porter-duff]: See https://www.w3.org/TR/compositing-1/#advancedcompositing
 [^not-alpha]: So no, `alpha` is NOT
 
 - some data attached to colors without any inherent meanings.
 - a presentation of opacity/transparency. Well maybe, but please also give the physical model of transparency that it matches if you suggest so.
-- how much each color contributes to the final color. Well it is, but this description is not meaningful at all.
+- how much each color contributes to the final color. Well it is, but does this description give any useful information at all?
 
-And no. Even if both color data are from the same colorspace, as long as it's
-not a linear RGB colorspace, alpha blending them is incorrect. The results may
-look "not bad", but they are incorrect, as suggested in variation 3 in
+[^no-non-linear-alpha]: And no, even if both color data are from the same
+colorspace, as long as it's not a linear RGB colorspace, alpha blending them is
+incorrect. The results may look "not bad", but they are incorrect, as suggested
+in variation 3 in
 https://www.w3.org/TR/PNG-Decoders.html#D.Alpha-channel-processing.
 
 ## Alpha and transparency
 
-alpha
+As far as I know alpha does not inherently mean transparency. I think its
+creators might have an intention of modelling transparency, but am not sure. I
+am not familiar with how transparency is dealt in physics, and cannot comment
+on whether or how well they match. Alpha blending appears to my eyes as pretty
+good modelling of transparency, though.
 
 ## Alpha blending and sRGB or gamma colorspaces.
 
+This is a huge gotcha. As mentioned [above](#alpha), alpha blending must happen
+with color data in a linear RGB colorspace. Now let's blend blackest black (R:
+0, G: 0, B: 0) and whitest white (R: 1, G: 1, B: 1) from the sRGB colorspace.
+Give the black an alpha of 0.5 and white an alpha of 1 and perform `black over
+white`. sRGB blackest black is same as linear sRGB blackest black. Same for
+whitest white. So we can just directly apply [alpha blending](#alpha-blending).
+Doing math, we get the result (R: 0.5, G: 0.5, B: 0.5). Now we need to convert
+it to sRGB... And we get (R: 0.735, G: 0.735, B: 0.735).
+
+So... Is this correct? If you've luckily never dealt with the alpha value
+before, you may think this is correct. The math doesn't seem wrong, and what's
+the problem with an white area half-covered by black [looks
+brighter](#human-perception-and-intensity) than a (R: 0.5, G: 0.5, B: 0.5)
+gray perfectly sitting in the middle?
+
+But you've dealt with alpha before... In some image editing software, you've
+adjusted alpha, and a middle alpha does create a value in the middle... In
+CSS, `rgba(0, 0, 0, 0.5)` is indeed darker...
+
+The 2 articles I mentioned at the top documents both had a kinda optimistic
+tone with regards to how today's software are dealing with colorspaces. That
+made me think I could use some common software for reference.
+
+And all of the ones I tried, by default, give a middle gray for the
+compositing. With extra experimentation, I found that, they did get to that
+result by doing alpha blending on colors in the sRGB colorspace, [which is
+wrong](#alpha-blending-and-linear-colorspaces).
+
+The experiments I did are recorded in [the next
+section](#alpha-blending-implementations).
+
+I found online
+[other](https://www.reddit.com/r/Unity3D/comments/z2jtks/why_alpha_blending_is_so_different_in_unity_and/)
+[people](https://www.reddit.com/r/gamedev/comments/nds4h5/alpha_blending_and_srgb/)
+who got to this result and asked questions, and unfortunately the people
+answering all seemed as confused. Hopefully I can explain this better:
+
+1. The (R: 0.735, G: 0.735, B: 0.735) result is correct. It is the sRGB values
+that correspond to the overall light emitted by a half-black half-white area.
+2. The intuition that a half-black and half-white area should look like middle
+grey is wrong. It's an intuition that has been built from using [wrong
+implementations](#alpha-blending-implementations).
+3. A real-life [perceptually](#human-perception-and-intensity) half-transparent
+object works differently than [covering half light from beneath it](#alpha).
+Half-alpha never meant to represent perceptual half-transparency.
+4. Do not [reference other software](#alpha-blending-implementations) for alpha
+blending. Assume them to be wrong by default.
+5. But I do want *something* that represents half transparency when it goes to
+half! Well, you're walking into an uncharted area I suppose... The world is huge
+though, in my familiar area of computers I don't think I've heard of something
+that can be used for that, but maybe there's something already in the creative
+industry or the academia?
+
 ## Alpha blending implementations
 
-## Perceptual RGB colorspace
+## "Storing alpha value linearly"
 
-The colors humans feel do not map simply to intensities. Human eyes are better
-at seeing differences in intensities at lower intensities. At a lower
-intensity, a human may see a slight different in intensity. At higher
-intensity, not so much.
+It is suggested here and there that alpha value should be "stored linearly".
+[The PNG spec](https://www.w3.org/TR/PNG-Decoders.html#D.Alpha-channel-processing)
+is often used as a reference.
 
-We define perceptual RGB colorspaces, where colors are stored as (R perceptual,
-G perceptual, B perceptual), where values are linear to human perception, i. e.
-a smallest noticable change at the lower value has the same numerical value as
-a smallest noticable change at the higher value.
+It's a kinda funny suggestion. When we use terms like "linear RGB colorspace",
+"linear" isn't just an adjective here. It's a relationship. It suggests that
+color data values in such a colorspace are linear maps of physical light
+intensities. A value cannot be linear all by it self[^self-linear], it has
+to be linear *against* something.
 
-## 2.2 Gamma, sRGB and human perception
+At this point, I understand that
 
-Color data, though conceptually mostly continuous, in the end, still need to be
-converted to/from bytes that can only represent discrete numbers that can only
-change in steps. After color data in the sRGB or gamma colorspaces are
-converted to such discrete numbers, they get one property: a step change at a
-lower value corresponds to a smaller change in the luminance, or more
-precisely, the [linear RGB colorspace](#linear-rgb-colorspace). the smaller a
-step in a value needs to be, the more bits are needed to store the value. This
-property of sRGB and gamma colorspaces allow them to use a bigger step to
-represent the smallest noticable change at both low luminance, compared to a
-linear RGB colorspace. This make the colorspaces more bit-efficient.
+[^self-linear]: Well, technically it can, and it is, but that's not very
+meaningful.
