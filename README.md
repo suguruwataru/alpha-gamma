@@ -357,7 +357,7 @@ value that comes from the same color data. As a result, if we have
 
 Alpha blending becomes
 
-    (result alpha) = (color 1 alpha) + (color 2 alpha) * (1 - color 1 alpha)
+    (result alpha) = (color 1 alpha) + (color 2 alpha) * (1 - (color 1 alpha))
     (result R'/G'/B') = (color 1 R'/G'/B') + (color 2 R'/G'/B') * (1 - (color 1 alpha))
 
 The later equation becomes much simpler and we get rid of the division which
