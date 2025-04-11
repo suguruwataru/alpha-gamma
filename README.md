@@ -18,9 +18,7 @@ started doing searches and now I think I understand it, and I believe there are
 things I can add to these great articles.
 
 I'll write things down in the form of definitions, with later ones building on
-top of previous ones. Note it may take several attempts to reach a final
-definition, and they only stand within the context of this document. Other
-people may have different definitions for the words.
+top of previous ones.
 
 ## Color
 
@@ -303,7 +301,6 @@ and many other colorspaces.
 
 [^porter-duff]: See https://www.w3.org/TR/compositing-1/#advancedcompositing
 [^not-alpha]: So no, `alpha` is NOT
-
 - some data attached to colors without any inherent meanings.
 - a presentation of opacity/transparency. Well maybe, but please also give the physical model of transparency that it matches if you suggest so.
 - how much each color contributes to the final color. Well it is, but does this description give any useful information at all?
@@ -352,7 +349,7 @@ compositing. With extra experimentation, I found that, they did get to that
 result by doing alpha blending on colors in the sRGB colorspace, [which is
 wrong](#alpha-blending-and-linear-colorspaces).
 
-The experiments I did are recorded in [the next
+The experiments I did are recorded in [a following
 section](#alpha-blending-implementations).
 
 I found online
@@ -377,8 +374,6 @@ though, in my familiar area of computers I don't think I've heard of something
 that can be used for that, but maybe there's something already in the creative
 industry or the academia?
 
-## Alpha blending implementations
-
 ## "Storing alpha value linearly"
 
 It is suggested here and there that alpha value should be "stored linearly".
@@ -391,7 +386,88 @@ color data values in such a colorspace are linear maps of physical light
 intensities. A value cannot be linear all by it self[^self-linear], it has
 to be linear *against* something.
 
-At this point, I understand that
+[^self-linear]: Well, technically it can, and it is, linear against itself, but
+saying this is not very meaningful.
 
-[^self-linear]: Well, technically it can, and it is, but that's not very
-meaningful.
+At this point, I understand that a alpha value is linear against area coverage.
+That's not something that I can possibly know from hearing "alpha is stored
+linearly" though.
+
+## Alpha blending implementations
+
+Let's create a gradient that goes from transparent to red with
+[ImageMagick](https://imagemagick.org/).
+
+    magick -size 400x100 -define gradient:direction=east gradient:'#00000000-#ff0000' r.png
+
+![r.png](r.png)
+
+Then create the green background to blend to:
+
+    magick -size 400x100 xc:'#00ff00' g.png
+
+![g.png](g.png)
+
+Now let's blend them.
+
+    magick g.png r.png -composite blend1.png
+
+![blend1.png](blend1.png)
+
+And in the middle of the image we see exactly the darker area described in [How
+software gets color wrong](https://bottosson.github.io/posts/colorwrong/). We
+know that alpha blending are applied to sRGB values.
+
+As [mentioned above](#srgb-importance), PNG files with no colorspace info are
+generally assumed to contain sRGB values. ImageMagick does that and [explicitly
+states](https://imagemagick.org/script/color-management.php) that that's what
+they do.
+
+To their credit, ImageMagick does mention in their documentation that when
+doing operations such as blending you want to manually convert to the linear
+RGB colorspace first. They just don't default to that.
+
+    magick g.png -colorspace RGB r.png -colorspace RGB -composite -colorspace sRGB blend2.png
+
+![blend2.png](blend2.png)
+
+Now we get the correct result.
+
+What about other software? Let's try krita:
+
+![krita.png](krita.png)
+
+So sRGB it is.
+
+And what about gimp?
+
+![gimp.png](gimp.png)
+
+Wow. Good job GIMP. I should have used you as a reference sooner.
+
+What about browsers? It was actually the brower CSS `rgba` that made me think
+half-alpha is half-transparency. Let's use this HTML snippet
+
+    <html>
+      <style>
+        body {
+          background: rgb(0, 255, 0);
+        }
+        div {
+          background: linear-gradient(to right, rgba(0, 0, 0, 0), rgb(255, 0, 0));
+          width: 400px;
+          height: 100px;
+        };
+      </style>
+      <body>
+        <div/>
+      </body>
+    </html>
+
+Chromium:
+![chromium](chromium.png)
+
+firefox:
+![firefox](firefox.png)
+
+Unsurprisingly, browsers blend with sRGB values.
