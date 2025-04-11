@@ -269,10 +269,12 @@ also called the `over` operator in Porter-Duff compositing. The formula of
 producing the `result` of color data in a **linear**[^why-linear] RGB
 colorspace `color 1` `over` `color2` is:
   
-    (result alpha) = (color 1 alpha) + (color 2 alpha) * (1 - color 1 alpha)
+    (result alpha) = (color 1 alpha) + (color 2 alpha) * (1 - (color 1 alpha))
     (result R/G/B) = (
         (color 1 R/G/B) * (color 1 alpha) + (color 2 R/G/B) * (color 2 alpha) * (1 - (color 1 alpha))
     ) / (result alpha)
+
+See [the alpha section](#alpha) for what the result means.
 
 [^why-linear]: See [the Alpha blending and linear RGB colorspace
 section](#alpha-blending-and-linear-rgb-colorspace) for why this has to be a
@@ -284,8 +286,7 @@ Assume there is a shape, which is partially covered by an shape of a certain
 color and partially covered by another shape of certain color (the later shapes
 can cover each other, too), and we can only use one color to describe the
 appearance of the whole shape, [the Porter-Duff `over`
-operator](#alpha-blending) (or Porter-Duff operators in general) calculates the
-color.
+operator](#alpha-blending) calculates the color.
 
 In such calculations, by convention, each of the covering shape's colors carry
 an extra component that is called `alpha` (so they go from (R value, G value, B
@@ -312,8 +313,8 @@ to the ratio of area meaning. The reason being, do you know the physics of
 transparency/opacity? I certainly don't. Only the ratio of area meaning is
 something that I can reason about.
 
-[Alpha blending](#alpha-blending) applies to both meanings. That's the
-guarantee its creators gave us.
+[Alpha blending](#alpha-blending) works for both meanings. That's the guarantee
+its creators gave us.
 
 ## Alpha blending and linear RGB colorspaces
 
@@ -325,10 +326,10 @@ preserving](https://en.wikipedia.org/wiki/Linear_map#Definition_and_first_conseq
 so since alpha blending works on physical light, it works on any linear RGB
 colorspace. However, the operation preserving property only holds when
 operations are all linear. For any color data produced through non-linear
-operations from phyisical light intensity, alpha blending is not designed to
-work, and directly applying alpha blending to them is undefined
-behavior.[^no-non-linear-alpha] This includes color data in the gamma, sRGB,
-and many other colorspaces.
+operations from [linear RGB colorspaces](#linear-color-space), alpha blending
+is not designed to work, and directly applying alpha blending to them can be
+said to be undefined behavior.[^no-non-linear-alpha] This includes color data
+in the gamma, sRGB, and many other colorspaces.
 
 [^no-non-linear-alpha]: And no, [even if both color data are from the same
 colorspace](https://www.luoruiyao.cn/blog/the-ultimate-guide-to-alpha-compisition),
