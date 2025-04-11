@@ -136,10 +136,12 @@ electron guns), they generally worked like this:
   
     intensity = (data value) ^ (CRT gamma)
 
-By convention, intensity and data value are numerized in a way so that
+By convention, intensity is represented by numbers in the [0-1 linear RGB
+colorspace](#linear-rgb-colorspace) described above, and data values are
+also numerized so that
 
-- 1 represents the highest relevant[^relevant] intensity or data value
-- 0 represents the lowest relevant intensity or data value
+- 1 corresponds to the highest relevant[^relevant] intensity
+- 0 corresponds to the lowest relevant intensity
 
 Within such convention, CRT gamma is generally 2.2-2.5.
 
