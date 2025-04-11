@@ -142,8 +142,8 @@ By convention, intensity and data value are numerized in a way so that
 
 Within such convention, CRT gamma is generally 2.2-2.5.
 
-To cancel their effect, gamma correction with a gamma of value 1/(CRT gamma)
-needs to be done.
+To cancel their effect, [gamma correction](#gamma-correction) with a gamma of
+value 1/(CRT gamma) needs to be done.
 
 See also [the gamma tutorial in the PNG spec](https://www.w3.org/TR/PNG-GammaAppendix.html).
 
@@ -165,10 +165,10 @@ had their values being:
 
 ## Gamma colorspace
 
-By our definition of a colorspace, the [2.2-gamma-corrected color
-data](#22-gamma) of course are in their own [colorspace](#colorspace). I don't
-think this is formalized any where, but conventionally it's often said that
-they are in "the gamma colorspace".
+By [our definition of a colorspace](#colorspace), the [2.2-gamma-corrected
+color data](#22-gamma) of course are in their own [colorspace](#colorspace). I
+don't think this is formalized any where, but conventionally it's often said
+that they are in "the gamma colorspace".
 
 ## sRGB colorspace
 
@@ -201,7 +201,7 @@ will be assumed to be in sRGB format. Also your choice of texture format (like
 whether its `rgba8uorm` or `rgba8unorm-srgb`) does not affect this. They only
 affect the data you read/write with the texture in your shader. Generally you
 want to use a `-srgb` texture and write [linear sRGB](#linear-srgb-colorspace)
-data to it.
+data to it in shaders.
 
 etc. etc.
 
@@ -213,7 +213,7 @@ from the a linear RGB colorspace.
 
 sRGB does explicitly approximate the gamma colorspace to be somewhat compatible
 with color data that was gamma corrected for whatever correction needs at that
-time. Therefore, applying a 2.2 or 1/2.2 gamma to some color data to convert to
+time. Therefore, applying a 1/2.2 or 2.2 gamma to some color data to convert to
 and from sRGB is not entirely wrong, but is still not entirely correct either.
 sRGB's own conversion functions are more complicated, so this is still a pretty
 common shorthand/optimization, when one doesn't need to be *that* correct.
@@ -222,8 +222,8 @@ common shorthand/optimization, when one doesn't need to be *that* correct.
 
 The colors humans feel do not map simply to intensities. Human eyes are better
 at seeing differences in intensities at lower intensities. At a lower
-intensity, a human may see a slight difference in intensity. At higher
-intensity, not so much.
+intensity, a human may see a slight difference in intensity. If such a
+difference appears at a higher intensity, not so much.
 
 ## 2.2 Gamma, sRGB and human perception
 
@@ -287,29 +287,12 @@ is a ratio of areas.[^porter-duff][^not-alpha]
 [^porter-duff]: See https://www.w3.org/TR/compositing-1/#advancedcompositing
 
 [^not-alpha]: So no, `alpha` is NOT **1.** some data attached to colors without
-any inherent meanings. **2.** A presentation of opacity/transparency. Well
-maybe, but please also give the physical model of transparency that it matches
-if you suggest so. **3.** how much each color contributes to the final color.
-Well it is, but does this description give any useful information at all?
-
-## "Storing alpha value linearly"
-
-It is suggested here and there that alpha value should be "stored linearly".
-[The PNG spec](https://www.w3.org/TR/PNG-Decoders.html#D.Alpha-channel-processing)
-is often used as a reference.
-
-It's a kinda funny suggestion. When we use terms like "linear RGB colorspace",
-"linear" isn't just an adjective here. It's a relationship. It suggests that
-color data values in such a colorspace are linear maps of physical light
-intensities. A value cannot be linear all by it self[^self-linear], it has
-to be linear *against* something.
-
-[^self-linear]: Well, technically it can, and it is, linear against itself, but
-saying this is not very meaningful.
-
-At this point, I understand that a alpha value is linear against area coverage.
-That's not something that I can possibly know from hearing "alpha is stored
-linearly" though.
+any inherent meanings. It is well-defined and the definition is simple and
+clear. **2.** A presentation of opacity/transparency. Well maybe, but what is
+opacity/transparency? Please also give the physical model of transparency that
+it matches if you suggest so. **3.** how much each color contributes to the
+final color. Well it is, but does this description give any useful information
+at all?
 
 ## Alpha blending and linear RGB colorspaces
 
@@ -332,13 +315,33 @@ incorrect. The results may look "not bad", but they are incorrect, as suggested
 in variation 3 in
 https://www.w3.org/TR/PNG-Decoders.html#D.Alpha-channel-processing.
 
+## "Storing alpha value linearly"
+
+It is suggested here and there that alpha value should be "stored linearly".
+[The PNG spec](https://www.w3.org/TR/PNG-Decoders.html#D.Alpha-channel-processing)
+is often used as a reference.
+
+It's a kinda funny suggestion. Now I understand that what they mean is just
+that don't apply gamma on the alpha values, but such an expression is certainly
+confusing. When we use terms like "linear RGB colorspace", "linear" isn't just
+an adjective here. It's a relationship. It suggests that color data values in
+such a colorspace are linear maps of physical light intensities. A value cannot
+be linear all by itself[^self-linear], it has to be linear *against something*.
+
+[^self-linear]: Well, technically it can, and it is, linear against itself, but
+saying this is not very meaningful.
+
+At this point, I understand that a alpha value is linear against area coverage.
+That's not something that I can possibly know from hearing "alpha is stored
+linearly" though.
+
 ## Alpha and transparency
 
-As far as I know alpha does not inherently mean transparency. I think its
-creators might have an intention of modelling transparency, but am not sure. I
-am not familiar with how transparency is dealt in physics, and cannot comment
-on whether or how well they match. Alpha blending appears to my eyes as pretty
-good modelling of transparency, though.
+As far as I know [alpha](#alpha) does not inherently mean transparency. I think
+its creators might have an intention of modelling transparency, but am not
+sure. I am not familiar with how transparency is dealt in physics, and cannot
+comment on whether or how well they match. Alpha blending appears to my eyes as
+pretty good modelling of transparency, though.
 
 ## Alpha blending and sRGB or gamma colorspaces.
 
@@ -442,11 +445,7 @@ Now we get the correct result.
 
 What about other software? Let's try imv.
 
-```
-
     imv -b00ff00 r.png
-
-```
 
 ![imv.png](imv.png)
 
