@@ -334,8 +334,8 @@ indications](https://shi-yan.github.io/note_on_alpha_blending/), you got it
 wrong.
 
 As seen in the [alpha blending](#alpha-blending) equations, R/G/B values never
-appear in the equations: they are always multiplied by the alpha value that
-comes from the same color data. As a result, if we have
+appear by themselves in the equations: they are always multiplied by the alpha
+value that comes from the same color data. As a result, if we have
 
     R' = R * alpha
     G' = G * alpha
