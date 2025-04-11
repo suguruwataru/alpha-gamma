@@ -74,9 +74,10 @@ here, and let's say that the 3-tuples are in the RGB colorspace.
 
 ## Linear RGB colorspace
 
-An RGB colorspace is still very abstract. A color is store as numbers, which
-are intensity in a tuple. Of course intensity can be written as numbers, but
-how exactly? What unit do we use? How exactly do we store the numbers as bytes?
+An RGB colorspace is still very abstract. A color is stored as numbers, which
+are intensities in a tuple. Of course intensities can be written as numbers,
+but how exactly? What unit do we use? How exactly do we store the numbers as
+bytes?
 
 We can give different answers to the questions. With each answer combination,
 we create an instance of the RGB colorspace. If the instance's (R intensity, G
@@ -197,8 +198,8 @@ An image viewer will assume a PNG file to be in sRGB and try to make your
 monitor emit light calculated from its data using a function given by sRGB.
 
 If you render to a GPU texture that is shown on screen, the data put into it
-will be assumed to be in sRGB format. Also your choice of texture format (like
-whether its `rgba8uorm` or `rgba8unorm-srgb`) does not affect this. They only
+will be assumed to be in sRGB values. Also your choice of texture format (like
+whether its `rgba8unorm` or `rgba8unorm-srgb`) does not affect this. They only
 affect the data you read/write with the texture in your shader. Generally you
 want to use a `-srgb` texture and write [linear sRGB](#linear-srgb-colorspace)
 data to it in shaders.
@@ -211,17 +212,18 @@ etc. etc.
 colorspace](#gamma-colorspace). sRGB has different functions to convert to and
 from the a linear RGB colorspace.
 
-sRGB does explicitly approximate the gamma colorspace to be somewhat compatible
-with color data that was gamma corrected for whatever correction needs at that
-time. Therefore, applying a 1/2.2 or 2.2 gamma to some color data to convert to
-and from sRGB is not entirely wrong, but is still not entirely correct either.
-sRGB's own conversion functions are more complicated, so this is still a pretty
-common shorthand/optimization, when one doesn't need to be *that* correct.
+sRGB does intentionally approximate the gamma colorspace to be somewhat
+compatible with color data that was gamma corrected for whatever correction
+needs at that time. Therefore, applying a 1/2.2 or 2.2 gamma to some color data
+to convert to and from sRGB is not entirely wrong, but is still not entirely
+correct either. sRGB's own conversion functions are more complicated, so this
+is still a pretty common shorthand/optimization, when one doesn't need to be
+*that* correct.
 
 ## Human perception and intensity
 
-The colors humans feel do not map simply to intensities. Human eyes are better
-at seeing differences in intensities at lower intensities. At a lower
+The colors humans feel do not map linearly to intensities. Human eyes are
+better at seeing differences in intensities at lower intensities. At a lower
 intensity, a human may see a slight difference in intensity. If such a
 difference appears at a higher intensity, not so much.
 
@@ -362,11 +364,12 @@ It is suggested here and there that alpha value should be "stored linearly".
 is often used as a reference.
 
 It's a kinda funny suggestion. Now I understand that what they mean is just
-that don't apply gamma on the alpha values, but such an expression is certainly
-confusing. When we use terms like "linear RGB colorspace", "linear" isn't just
-an adjective here. It's a relationship. It suggests that color data values in
-such a colorspace are linear maps of physical light intensities. A value cannot
-be linear all by itself[^self-linear], it has to be linear *against something*.
+that you shouldn't [apply gamma](#gamma-correction) on the alpha values, but
+such an expression is certainly confusing. When we use terms like "linear RGB
+colorspace", "linear" isn't just an adjective here. It's a relationship. It
+suggests that color data values in such a colorspace are linear maps of
+physical light intensities. A value cannot be linear all by
+itself[^self-linear], it has to be linear *against something*.
 
 [^self-linear]: Well, technically it can, and it is, linear against itself, but
 saying this is not very meaningful.
@@ -429,7 +432,7 @@ blending. Assume them to be wrong by default.
 to half? Well, you're walking into an uncharted area I suppose... I'm not aware
 of any well-known concept for that. Gimp, [which implements alpha blending
 correctly](#alpha-blending-implementations), still has the tranditional
-"opacity" bar for layers, so maybe you can checkout how it does that. Also,
+"opacity" bar for layers, so maybe you can check out how it does that. Also,
 maybe there's something already in the creative industry or the academia?
 
 ## Alpha blending implementations
