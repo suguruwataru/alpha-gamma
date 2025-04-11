@@ -55,9 +55,9 @@ we say that the data is in this colorspace.
 
 The physiology of humans decides that, there are 3 special wavelengths, and by
 combining light of the 3 wavelengths of different intensities, one can recreate
-any color a typical human can perceive.
+any color the human can perceive.
 
-When pure light of the 3 wavelengths hit a typical human eye with an
+When pure light of the 3 wavelengths hit a human eye with an
 appropriate intensity, they respectively causes the human to feel red, green,
 blue, so let's just call light of the wavelengths R, G, B.
 
