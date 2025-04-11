@@ -89,11 +89,9 @@ colorspace, color data have the form (R value, G value, B value) such that
 - When a value is 0, it means the lowest relevant[^relevant] intensity
 - When a value is 1, it means the highest relevant intensity
 
-[^relevant]: "relevant intensity" means different things in different instances of
-colorspaces:
-  - lowest/highest intensity that humans can perceive
-  - lowest/highest intensity that a device can emit light for
-  - etc.
+[^relevant]: "relevant intensity" means different things in different instances
+of colorspaces: **1.** lowest/highest intensity that humans can perceive.
+**2.** lowest/highest intensity that a device can emit light for. **3.** etc.
 
 Reference to such a linear RGB colorspace is so prevalent that "linear RGB
 colorspace" mostly just means this kind of colorspace.
@@ -288,10 +286,30 @@ is a ratio of areas.[^porter-duff][^not-alpha]
 
 [^porter-duff]: See https://www.w3.org/TR/compositing-1/#advancedcompositing
 
-[^not-alpha]: So no, `alpha` is NOT
-  - some data attached to colors without any inherent meanings.
-  - A presentation of opacity/transparency. Well maybe, but please also give the physical model of transparency that it matches if you suggest so.
-  - how much each color contributes to the final color. Well it is, but does this description give any useful information at all?
+[^not-alpha]: So no, `alpha` is NOT **1.** some data attached to colors without
+any inherent meanings. **2.** A presentation of opacity/transparency. Well
+maybe, but please also give the physical model of transparency that it matches
+if you suggest so. **3.** how much each color contributes to the final color.
+Well it is, but does this description give any useful information at all?
+
+## "Storing alpha value linearly"
+
+It is suggested here and there that alpha value should be "stored linearly".
+[The PNG spec](https://www.w3.org/TR/PNG-Decoders.html#D.Alpha-channel-processing)
+is often used as a reference.
+
+It's a kinda funny suggestion. When we use terms like "linear RGB colorspace",
+"linear" isn't just an adjective here. It's a relationship. It suggests that
+color data values in such a colorspace are linear maps of physical light
+intensities. A value cannot be linear all by it self[^self-linear], it has
+to be linear *against* something.
+
+[^self-linear]: Well, technically it can, and it is, linear against itself, but
+saying this is not very meaningful.
+
+At this point, I understand that a alpha value is linear against area coverage.
+That's not something that I can possibly know from hearing "alpha is stored
+linearly" though.
 
 ## Alpha blending and linear RGB colorspaces
 
@@ -359,9 +377,10 @@ I found online
 [other](https://www.reddit.com/r/Unity3D/comments/z2jtks/why_alpha_blending_is_so_different_in_unity_and/)
 [people](https://www.reddit.com/r/gamedev/comments/nds4h5/alpha_blending_and_srgb/)
 who got to this result and asked questions, and unfortunately the people
-answering all seemed as confused. Hopefully I can explain this better:
+answering all seemed as confused. Now that I have my own conclusions, hopefully
+I can explain this better:
 
-1. The (R: 0.735, G: 0.735, B: 0.735) result is correct. It is the sRGB values
+1. The (R: 0.735, G: 0.735, B: 0.735) result is correct. It *is* the sRGB values
 that correspond to the overall light emitted by a half-black half-white area.
 2. The intuition that a half-black and half-white area should look like middle
 grey is wrong. It's an intuition that has been built from using [wrong
@@ -378,26 +397,10 @@ correctly](#alpha-blending-implementations), still has the tranditional
 "opacity" bar for layers, so maybe you can checkout how it does that. Also,
 maybe there's something already in the creative industry or the academia?
 
-## "Storing alpha value linearly"
-
-It is suggested here and there that alpha value should be "stored linearly".
-[The PNG spec](https://www.w3.org/TR/PNG-Decoders.html#D.Alpha-channel-processing)
-is often used as a reference.
-
-It's a kinda funny suggestion. When we use terms like "linear RGB colorspace",
-"linear" isn't just an adjective here. It's a relationship. It suggests that
-color data values in such a colorspace are linear maps of physical light
-intensities. A value cannot be linear all by it self[^self-linear], it has
-to be linear *against* something.
-
-[^self-linear]: Well, technically it can, and it is, linear against itself, but
-saying this is not very meaningful.
-
-At this point, I understand that a alpha value is linear against area coverage.
-That's not something that I can possibly know from hearing "alpha is stored
-linearly" though.
-
 ## Alpha blending implementations
+
+We'll check some existing implementations and see how they implement [alpha
+blending](#alpha-blending).
 
 Let's create a gradient that goes from transparent to red with
 [ImageMagick](https://imagemagick.org/).
