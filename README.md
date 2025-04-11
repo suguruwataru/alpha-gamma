@@ -300,10 +300,12 @@ behavior.[^no-non-linear-alpha] This includes color data in the gamma, sRGB,
 and many other colorspaces.
 
 [^porter-duff]: See https://www.w3.org/TR/compositing-1/#advancedcompositing
-[^not-alpha]: So no, `alpha` is NOT
-- some data attached to colors without any inherent meanings.
-- a presentation of opacity/transparency. Well maybe, but please also give the physical model of transparency that it matches if you suggest so.
-- how much each color contributes to the final color. Well it is, but does this description give any useful information at all?
+
+[^not-alpha]: So no, `alpha` is NOT 1. some data attached to colors without any
+inherent meanings. 2. A presentation of opacity/transparency. Well maybe, but
+please also give the physical model of transparency that it matches if you
+suggest so. 3. how much each color contributes to the final color. Well it is,
+but does this description give any useful information at all?
 
 [^no-non-linear-alpha]: And no, even if both color data are from the same
 colorspace, as long as it's not a linear RGB colorspace, alpha blending them is
