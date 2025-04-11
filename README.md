@@ -192,8 +192,7 @@ sRGB's actual definition include more things, things like what the whitest
 white is, what the redest red is, etc. so that newer software and devices that
 take sRGB into account can more accurately store or recreate the color.
 
-I will not put more details in the sRGB standard in this document, and wish
-that you never need to implement conversion between sRGB and [linear
+I will go into the details of the sRGB standard in this document, because you generally never need to implement conversion between sRGB and [linear
 sRGB](#linear-srgb-colorspace) yourself.
 
 ## Importance of the sRGB colorspace
@@ -206,7 +205,7 @@ monitor emit light calculated from its data using a function given by sRGB.
 
 If you render to a GPU texture that is shown on screen, the data put into it
 will be assumed to be in sRGB values. Also your choice of texture format (like
-whether its `rgba8unorm` or `rgba8unorm-srgb`) does not affect this. They only
+whether it's `rgba8unorm` or `rgba8unorm-srgb`) does not affect this. They only
 affect the data you read/write with the texture in your shader. Generally you
 want to use a `-srgb` texture and write [linear sRGB](#linear-srgb-colorspace)
 data to it in shaders.
