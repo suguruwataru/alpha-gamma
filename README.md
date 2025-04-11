@@ -440,11 +440,23 @@ RGB colorspace first. They just don't default to that.
 
 Now we get the correct result.
 
-What about other software? Let's try krita:
+What about other software? Let's try imv.
+
+```
+
+    imv -b00ff00 r.png
+
+```
+
+![imv.png](imv.png)
+
+So sRGB it is.
+
+What about krita?
 
 ![krita.png](krita.png)
 
-So sRGB it is.
+Also sRGB.
 
 And what about gimp?
 
@@ -480,3 +492,6 @@ firefox:
 ![firefox](firefox.png)
 
 Unsurprisingly, browsers blend with sRGB values.
+
+Not trying to say anything bad about any of the ones I tried above, though.
+These are all great software!
