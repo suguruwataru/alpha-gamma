@@ -91,7 +91,6 @@ colorspace, color data have the form (R value, G value, B value) such that
 
 [^relevant]: "relevant intensity" means different things in different instances of
 colorspaces:
-
   - lowest/highest intensity that humans can perceive
   - lowest/highest intensity that a device can emit light for
   - etc.
@@ -158,10 +157,11 @@ tutorial](https://www.w3.org/TR/PNG-GammaAppendix.html), it mentioned that
 > The original NTSC video standard required cameras to have a transfer function
 with a gamma of 1/2.2, or about 0.45.
 
-This is for gamma correction of that time, primarily to cancel the CRT gamma.
+This is for gamma correction of that time, primarily to cancel the [CRT
+gamma](#crt-gamma).
 
-In other words, gamma corrected color data from that time had their values
-being:
+In other words, [gamma corrected](#gamma-correction) color data from that time
+had their values being:
   
     (data value) = intensity ^ (1/2.2)
 
@@ -224,33 +224,36 @@ common shorthand/optimization, when one doesn't need to be *that* correct.
 
 The colors humans feel do not map simply to intensities. Human eyes are better
 at seeing differences in intensities at lower intensities. At a lower
-intensity, a human may see a slight different in intensity. At higher
+intensity, a human may see a slight difference in intensity. At higher
 intensity, not so much.
 
 ## 2.2 Gamma, sRGB and human perception
 
-sRGB and gamma colorspaces' behavior interestingly somewhat matches human
-feelings. At a lower intensity level, a change in intensity correponds to a
-larger change in sRGB or gamma value, compared to a same change at a higher
-intensity level.
+[sRGB](#srgb-colorspace) and [gamma colorspaces](#gamma-colorspace)' behavior
+interestingly somewhat matches [human
+feelings](#human-perception-and-intensity). At a lower intensity level, a
+change in intensity correponds to a larger change in sRGB or gamma value,
+compared to a same change at a higher intensity level.
 
-The gamma colorspace certainly doesn't mean to have such a property. It's just
-a result of the need for gamma correction. I am not aware of sRGB having the
-intention to match human perception this way, either. Therefore, such a
-matching is accidental, but is considered favorable. In addition to the fact
-that as a data value change matches human perception change, changing colors is
-more intuitive in those colorspaces, there's also storage efficiency
-consideration. The PNG specification gamma tutorial explains it well:
+The gamma colorspace certainly never meant to have such a property. It's just a
+result of the need for [gamma correction](#gamma-correction) with past
+technologies. I am not aware of sRGB having the intention to match human
+perception this way, either. Therefore, such a matching is accidental, but is
+considered favorable. In addition to the fact that as a data value change
+matches human perception change, adjusting colors is more intuitive for artists
+in those colorspaces, there's also storage efficiency consideration. The PNG
+specification gamma tutorial explains it well:
 https://www.w3.org/TR/PNG-GammaAppendix.html, in the "Gamma-encoded samples are
 good" section.
 
 ## Linear sRGB colorspace
 
-sRGB is more than just conversion to and from a linear colorspace.
+[sRGB](#srgb-colorspace) is more than just conversion to and from a linear
+colorspace.
 
 It also specifies things like what the whitest white is, what the redest red
-is, etc. The linear RGB colorspace that has all those properties matching sRGB
-is called the linear sRGB colorspace.
+is, etc. The [linear RGB colorspace](#linear-rgb-colorspace) that has all those
+properties matching sRGB is called the linear sRGB colorspace.
 
 ## Alpha blending
 
@@ -279,14 +282,13 @@ color.
 
 In such calculations, by convention, each of the covering shape's colors carry
 an extra component that is called `alpha` (so they go from (R value, G value, B
-value) 3-tuples to (R value, G value, B value, alpha)), which denotes the
-portion of the area of the lowest shape it covers. In other words, `alpha` is a
-ratio of areas.[^porter-duff][^not-alpha]
+value) 3-tuples to (R value, G value, B value, alpha) 4-tuples), which denotes
+the portion of the area of the lowest shape it covers. In other words, `alpha`
+is a ratio of areas.[^porter-duff][^not-alpha]
 
 [^porter-duff]: See https://www.w3.org/TR/compositing-1/#advancedcompositing
 
 [^not-alpha]: So no, `alpha` is NOT
-
   - some data attached to colors without any inherent meanings.
   - A presentation of opacity/transparency. Well maybe, but please also give the physical model of transparency that it matches if you suggest so.
   - how much each color contributes to the final color. Well it is, but does this description give any useful information at all?
