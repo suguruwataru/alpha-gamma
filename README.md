@@ -282,9 +282,13 @@ In such calculations, by convention, each of the covering shape's colors carry
 an extra component that is called `alpha` (so they go from (R value, G value, B
 value) 3-tuples to (R value, G value, B value, alpha) 4-tuples), which denotes
 the portion of the area of the lowest shape it covers. In other words, `alpha`
-is a ratio of areas.[^porter-duff]
+is a ratio of areas.[^porter-duff][^alpha-meaning]
 
 [^porter-duff]: See https://www.w3.org/TR/compositing-1/#advancedcompositing
+
+[^alpha-meaning]: So yes, alpha [does have an inherent
+meaning](https://computergraphics.stackexchange.com/questions/13473/how-is-the-alpha-value-treated-when-blending).
+It's well-defined and the definition is simple and clear.
 
 ## Alpha and opacity
 
