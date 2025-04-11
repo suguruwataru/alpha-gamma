@@ -282,17 +282,24 @@ In such calculations, by convention, each of the covering shape's colors carry
 an extra component that is called `alpha` (so they go from (R value, G value, B
 value) 3-tuples to (R value, G value, B value, alpha) 4-tuples), which denotes
 the portion of the area of the lowest shape it covers. In other words, `alpha`
-is a ratio of areas.[^porter-duff][^not-alpha]
+is a ratio of areas.[^porter-duff]
 
 [^porter-duff]: See https://www.w3.org/TR/compositing-1/#advancedcompositing
 
-[^not-alpha]: So no, `alpha` is NOT **1.** some data attached to colors without
-any inherent meanings. It is well-defined and the definition is simple and
-clear. **2.** A presentation of opacity/transparency. Well maybe, but what is
-opacity/transparency? Please also give the physical model of transparency that
-it matches if you suggest so. **3.** how much each color contributes to the
-final color. Well it is, but does this description give any useful information
-at all?
+## Alpha and opacity
+
+Alpha was not strictly defined to be a ratio of areas by its authors.
+Sometimes, it was also considered to be the opacity of a shape assuming that it
+fully covers the lowest shape.[^porter-duff2]
+
+[^porter-duff2]: See https://imaginary-institute.com/resources/TechNote10/TechNote10.html
+
+Though alpha can mean either of the things, this document generally will stick
+to the ratio of area meaning. The reason being, do you know physics of
+transparency/opacity? I certainly don't. Only the ratio of area meaning is
+something that I can reason about.
+
+[Alpha blending](#alpha-blending) applies to both meanings.
 
 ## Alpha blending and linear RGB colorspaces
 
@@ -334,14 +341,6 @@ saying this is not very meaningful.
 At this point, I understand that a alpha value is linear against area coverage.
 That's not something that I can possibly know from hearing "alpha is stored
 linearly" though.
-
-## Alpha and transparency
-
-As far as I know [alpha](#alpha) does not inherently mean transparency. I think
-its creators might have an intention of modelling transparency, but am not
-sure. I am not familiar with how transparency is dealt in physics, and cannot
-comment on whether or how well they match. Alpha blending appears to my eyes as
-pretty good modelling of transparency, though.
 
 ## Alpha blending and sRGB or gamma colorspaces.
 
