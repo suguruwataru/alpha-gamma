@@ -17,8 +17,7 @@ get it right, at least couldn't get it to be what I thought was right. Then I
 started doing searches and now I think I understand it, and I believe there are
 things I can add to these great articles.
 
-I'll write things down in the form of definitions, with later ones building on
-top of previous ones.
+I'll just write down what I've found.
 
 ## Color
 
@@ -26,8 +25,8 @@ A color is a feeling. Some electro-magnetic waves (also known as light) causes
 a typical human to get a feeling when they hit the human's eyes. For an
 idealized human in an idealized circumstance (refered to as just "human"
 below), each combination of light with certain intensities[^intensity] and
-wavelengths corresponds to a certain feeling. Each of the feelings is called a
-color.
+wavelengths of the light corresponds to a certain feeling. Each of the feelings
+is called a color.
 
 [^intensity]: Meansuring light intensity is another huge and messy topic, and
 I'm still not familiar about that, so I haven't decided what the physical
@@ -36,15 +35,16 @@ meaning of the "intensity" mentioned above should be. For now I assume it to be
 
 ## Colorspace
 
-We store colors as numbers in computers, so that we can recreate them later.
+We store [colors](#color) as numbers in computers, so that we can recreate them
+later.
 
 We can store colors in different ways, as long as we know how to recreate them.
 
 For instance, since colors correspond to combinations of light, when we want
 store a color, we can measure the combination of the light that causes the
-human to feel it, get an array of (wavelength, intensity). Later, we use
-whatever magical device we have to emit light so that what reaches the human's
-eyes still have the combination of wavelengths and intensity.
+human to feel it, get an array of (wavelength, intensity) tuples. Later, we
+use, say, some magical device we have to emit light so that what reaches the
+human's eyes still have the combination of wavelengths and intensity.
 
 With this setup, given a color, we can get numbers. Given numbers, we can get
 colors. We call this setup a colorspace, and if we store such numbers as data,
@@ -62,14 +62,14 @@ blue, so let's just call light of the wavelengths R, G, B.
 
 Thus, rather than array of (wavelength, intensity) tuples, we can store a color
 as (R intensity, G intensity, B intensity) 3-tuples. Obviously, compared to
-arrays of difference lengths and infinite number of possible wavelengths, these
-3-tuples are much easier to work with.
+arrays of difference lengths and infinite possible wavelengths, these 3-tuples
+are much easier to work with.
 
 We can measure light corresponding to a color and find corresponding values for
 R intensity, G intensity, and B intensity, so that with some
 red-blue-green-only light-emitting device (much simpler than full-spectrum
-ones) we can reproduce the color. So we do have a colorspace here, and let's
-say that the 3-tuples are in the RGB colorspace.
+ones) we can reproduce the color. So we do have a [colorspace](#colorspace)
+here, and let's say that the 3-tuples are in the RGB colorspace.
 
 ## Linear RGB colorspace
 
@@ -79,21 +79,21 @@ how exactly? What unit do we use? How exactly do we store the numbers as bytes?
 
 We can give different answers to the questions. With each answer combination,
 we create an instance of the RGB colorspace. If the instance's (R intensity, G
-intensity, B intensity) values form a linear relationship with plain physical
-measurements of intensity, we call it a linear RGB colorspace[^self], **but**,
-there is a certain type of linear RGB colorspaces that we pay most attention
-to. In such a colorspace, color data have the form (R value, G value, B value)
-such that
+intensity, B intensity) values form a [linear
+map](https://en.wikipedia.org/wiki/Linear_map) with plain physical measurements
+of intensity, we call it a linear RGB colorspace[^self], **but**, there is a
+certain type of linear RGB colorspaces that we pay most attention to. In such a
+colorspace, color data have the form (R value, G value, B value) such that
 
-- When a value is 0, it means the lowest relevant intensity
+- When a value is 0, it means the lowest relevant[^relevant] intensity
 - When a value is 1, it means the highest relevant intensity
 
-<a name="relevant"></a>
-Where "relevant intensity" mean different things in different contexts:
+[^relevant]: "relevant intensity" means different things in different instances of
+colorspaces:
 
-- lowest/highest intensity that humans can perceive
-- lowest/highest intensity that a device can emit light for
-- etc.
+  - lowest/highest intensity that humans can perceive
+  - lowest/highest intensity that a device can emit light for
+  - etc.
 
 Reference to such a linear RGB colorspace is so prevalent that "linear RGB
 colorspace" mostly just means this kind of colorspace.
@@ -106,7 +106,7 @@ colorspace.
 Due to how they function, the optical components of a camera may give its
 digital components colors in such a way:
 
-  (data value) = intensity ^ (camera gamma)
+    (data value) = intensity ^ (camera gamma)
 
 The exponent is called "gamma" by convention.
 
@@ -117,17 +117,17 @@ conditions.
 Therefore, to make the computer monitor recreate the intensity stored in some
 data, there needs to be a step:
   
-  intensity = (data value) ^ gamma
+    intensity = (data value) ^ gamma
 
-Where gamma cancels all the other gamma applied. Such cancellation is called
-gamma correction.
+Where this gamma cancels all the other gamma applied. Such cancellation is
+called gamma correction.
 
 There's more to gamma correction. The PNG specification has a nice tutorial
 about it: https://www.w3.org/TR/PNG-GammaAppendix.html
 
 ## Gamma
 
-See [gamma correction](#Gamma correction)
+See [gamma correction](#gamma-correction)
 
 ## CRT Gamma
 
@@ -135,17 +135,17 @@ In the past, the CRT monitors were the primary contributors to the need of gamma
 correction. When color data were fed to them (as voltage applied to their
 electron guns), they generally worked like this:
   
-  intensity = (data value) ^ (CRT gamma)
+    intensity = (data value) ^ (CRT gamma)
 
 By convention, intensity and data value are numerized in a way so that
 
-- 1 represents the highest [relevant](#relevant) intensity or data value
-- 0 represents the lowest [relevant](#relevant) intensity or data value
+- 1 represents the highest relevant[^relevant] intensity or data value
+- 0 represents the lowest relevant intensity or data value
 
 Within such convention, CRT gamma is generally 2.2-2.5.
 
-To cancel their effect, gamma correction with a gamma of value 1/(CRT gamma) need
-to be done.
+To cancel their effect, gamma correction with a gamma of value 1/(CRT gamma)
+needs to be done.
 
 See also [the gamma tutorial in the PNG spec](https://www.w3.org/TR/PNG-GammaAppendix.html).
 
@@ -179,7 +179,7 @@ devices. It stores colors' red, blue and green values in a way so that
 
     (sRGB value) = intensity ^ (1/2.2)
 
-[^srgb-draft]: Draft: https://www.w3.org/Graphics/Color/sRGB.
+[^srgb-draft]: Draft of the standard: https://www.w3.org/Graphics/Color/sRGB.
 
 This way, they stay somewhat compatible with data in the gamma colorspace.
 Software that were written for data in the gamma colorspace can show sRGB
@@ -192,17 +192,17 @@ take sRGB into account can more accurately store or recreate the color.
 ## Importance of the sRGB colorspace
 
 Today, sRGB is important because lots of things assume color data to be in
-sRGB if they don't have (often don't accept) exact info.
+sRGB if they don't have (often don't accept) extra info.
 
 An image viewer will assume a PNG file to be in sRGB and try to make your
 monitor emit light calculated from its data using a function given by sRGB.
 
 If you render to a GPU texture that is shown on screen, the data put into it
 will be assumed to be in sRGB format. Also your choice of texture format (like
-whether its `rgba8uorm` or `rgba8unorm-srgb`, in the context of wgpu) does not
-affect this. They only affect the data you read/write with the texture in your
-shader. Generally you want to use a `-srgb` texture and write [linear
-sRGB](#linear-srgb-colorspace) data to it.
+whether its `rgba8uorm` or `rgba8unorm-srgb`) does not affect this. They only
+affect the data you read/write with the texture in your shader. Generally you
+want to use a `-srgb` texture and write [linear sRGB](#linear-srgb-colorspace)
+data to it.
 
 etc. etc.
 
@@ -219,7 +219,7 @@ and from sRGB is not entirely wrong, but is still not entirely correct either.
 sRGB's own conversion functions are more complicated, so this is still a pretty
 common shorthand/optimization, when one doesn't need to be *that* correct.
 
-## Human perception and Intensity
+## Human perception and intensity
 
 The colors humans feel do not map simply to intensities. Human eyes are better
 at seeing differences in intensities at lower intensities. At a lower
@@ -245,9 +245,6 @@ good" section.
 
 ## Linear sRGB colorspace
 
- so that newer software and devices that
-take sRGB into account can more accurately store or recreate the color.
-
 sRGB is more than just conversion to and from a linear colorspace.
 
 It also specifies things like what the whitest white is, what the redest red
@@ -256,18 +253,19 @@ is called the linear sRGB colorspace.
 
 ## Alpha blending
 
-Alpha blending is the technique of combining multiple colors. It is also called
-the `over` operator in Porter-Duff compositing. The formula of producing the
-`result` of color data in a **linear**[^why-linear] RGB colorspace `color 1`
-`over` `color2` is:
+[Alpha](#alpha) blending is the technique of combining multiple colors. It is
+also called the `over` operator in Porter-Duff compositing. The formula of
+producing the `result` of color data in a **linear**[^why-linear] RGB
+colorspace `color 1` `over` `color2` is:
   
     (result alpha) = (color 1 alpha) + (color 2 alpha) * (1 - color 1 alpha)
     (result R/G/B) = (
         (color 1 R/G/B) * (color 1 alpha) + (color 2 R/G/B) * (color 2 alpha) * (1 - (color 1 alpha))
     ) / (result alpha)
 
-[^why-linear]: See [the Alpha section](#alpha) for why this has to be a linear
-RGB colorspace.
+[^why-linear]: See [the Alpha blending and linear RGB colorspace
+section](#alpha-blending-and-linear-rgb-colorspace) for why this has to be a
+linear RGB colorspace.
 
 ## Alpha
 
@@ -282,14 +280,22 @@ In such calculations, by convention, each of the covering shape's colors carry
 an extra component that is called `alpha` (so they go from (R value, G value, B
 value) 3-tuples to (R value, G value, B value, alpha)), which denotes the
 portion of the area of the lowest shape it covers. In other words, `alpha` is a
-ratio of areas.[^not-alpha]
+ratio of areas.[^porter-duff][^not-alpha]
+
+[^porter-duff]: See https://www.w3.org/TR/compositing-1/#advancedcompositing
+
+[^not-alpha]: So no, `alpha` is NOT
+
+  - some data attached to colors without any inherent meanings.
+  - A presentation of opacity/transparency. Well maybe, but please also give the physical model of transparency that it matches if you suggest so.
+  - how much each color contributes to the final color. Well it is, but does this description give any useful information at all?
 
 ## Alpha blending and linear RGB colorspaces
 
 Intuitively, [a ratio of areas](#alpha) linearly maps to the ratio of light
 emitted among all light emitted from the whole shape. With such a definition,
 alpha blending must have been designed to deal with physical light. Alpha
-blending is a linear map, and as linear maps are [operation
+blending is a linear map, and linear maps are [operation
 preserving](https://en.wikipedia.org/wiki/Linear_map#Definition_and_first_consequences),
 so since alpha blending works on physical light, it works on any linear RGB
 colorspace. However, the operation preserving property only holds when
@@ -298,14 +304,6 @@ operations from phyisical light intensity, alpha blending is not designed to
 work, and directly applying alpha blending to them is undefined
 behavior.[^no-non-linear-alpha] This includes color data in the gamma, sRGB,
 and many other colorspaces.
-
-[^porter-duff]: See https://www.w3.org/TR/compositing-1/#advancedcompositing
-
-[^not-alpha]: So no, `alpha` is NOT 1. some data attached to colors without any
-inherent meanings. 2. A presentation of opacity/transparency. Well maybe, but
-please also give the physical model of transparency that it matches if you
-suggest so. 3. how much each color contributes to the final color. Well it is,
-but does this description give any useful information at all?
 
 [^no-non-linear-alpha]: And no, even if both color data are from the same
 colorspace, as long as it's not a linear RGB colorspace, alpha blending them is
@@ -365,16 +363,17 @@ that correspond to the overall light emitted by a half-black half-white area.
 2. The intuition that a half-black and half-white area should look like middle
 grey is wrong. It's an intuition that has been built from using [wrong
 implementations](#alpha-blending-implementations).
-3. A real-life [perceptually](#human-perception-and-intensity) half-transparent
-object works differently than [covering half light from beneath it](#alpha).
-Half-alpha never meant to represent perceptual half-transparency.
+3. A real-life perceptually half-transparent object works differently than
+covering half light from beneath it. Half-alpha never meant to represent
+perceptual half-transparency.
 4. Do not [reference other software](#alpha-blending-implementations) for alpha
 blending. Assume them to be wrong by default.
-5. But I do want *something* that represents half transparency when it goes to
-half! Well, you're walking into an uncharted area I suppose... The world is huge
-though, in my familiar area of computers I don't think I've heard of something
-that can be used for that, but maybe there's something already in the creative
-industry or the academia?
+5. What if I do want *something* that represents half transparency when it goes
+to half? Well, you're walking into an uncharted area I suppose... I'm not aware
+of any well-known concept for that. Gimp, [which implements alpha blending
+correctly](#alpha-blending-implementations), still has the tranditional
+"opacity" bar for layers, so maybe you can checkout how it does that. Also,
+maybe there's something already in the creative industry or the academia?
 
 ## "Storing alpha value linearly"
 
@@ -450,6 +449,7 @@ Wow. Good job GIMP. I should have used you as a reference sooner.
 What about browsers? It was actually the brower CSS `rgba` that made me think
 half-alpha is half-transparency. Let's use this HTML snippet
 
+```html
     <html>
       <style>
         body {
@@ -465,6 +465,7 @@ half-alpha is half-transparency. Let's use this HTML snippet
         <div/>
       </body>
     </html>
+```
 
 Chromium:
 ![chromium](chromium.png)
