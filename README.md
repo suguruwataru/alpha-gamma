@@ -299,7 +299,8 @@ to the ratio of area meaning. The reason being, do you know physics of
 transparency/opacity? I certainly don't. Only the ratio of area meaning is
 something that I can reason about.
 
-[Alpha blending](#alpha-blending) applies to both meanings.
+[Alpha blending](#alpha-blending) applies to both meanings. That's the
+guarantee its creators gave us.
 
 ## Alpha blending and linear RGB colorspaces
 
@@ -316,11 +317,39 @@ work, and directly applying alpha blending to them is undefined
 behavior.[^no-non-linear-alpha] This includes color data in the gamma, sRGB,
 and many other colorspaces.
 
-[^no-non-linear-alpha]: And no, even if both color data are from the same
-colorspace, as long as it's not a linear RGB colorspace, alpha blending them is
-incorrect. The results may look "not bad", but they are incorrect, as suggested
-in variation 3 in
+[^no-non-linear-alpha]: And no, [even if both color data are from the same
+colorspace](https://www.luoruiyao.cn/blog/the-ultimate-guide-to-alpha-compisition),
+as long as it's not a linear RGB colorspace, alpha blending them is incorrect.
+The results may look "not bad", but they are incorrect, as suggested in
+variation 3 in
 https://www.w3.org/TR/PNG-Decoders.html#D.Alpha-channel-processing.
+
+## Premultiplying alpha
+
+Premultiplying alpha is a common *optimization* technique.
+
+Being an optimization, the only thing it changes is performance. So if you
+[think premultiplying alpha gets you new colors, or have some fancy
+indications](https://shi-yan.github.io/note_on_alpha_blending/), you got it
+wrong.
+
+As seen in the [alpha blending](#alpha-blending) equations, R/G/B values never
+appear in the equations: they are always multiplied by the alpha value that
+comes from the same color data. As a result, if we have
+
+    R' = R * alpha
+    G' = G * alpha
+    B' = B * alpha
+
+Alpha blending becomes
+
+    (result alpha) = (color 1 alpha) + (color 2 alpha) * (1 - color 1 alpha)
+    (result R'/G'/B') = (color 1 R'/G'/B') + (color 2 R'/G'/B') * (1 - (color 1 alpha))
+
+The later equation becomes much simpler and we get rid of the division which
+requires us to do a 0 check. Computers like this kind of equations much better.
+As a result, for performance, it's common to keep R'/G'/B' data instead of
+R/G/B data for a while if multiple alpha blending need to be done.
 
 ## "Storing alpha value linearly"
 
